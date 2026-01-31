@@ -16,10 +16,10 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet"
 import { useUser, useAuth } from "@/firebase"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "./ui/dropdown-menu"
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar"
-import { Skeleton } from "./ui/skeleton"
-import { Logo } from "./logo"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Skeleton } from "@/components/ui/skeleton"
+import { Logo } from "@/components/logo"
 
 const mainNavLinks = [
   { href: "/resume", label: "Create Resume" },
