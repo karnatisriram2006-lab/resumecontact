@@ -1,6 +1,6 @@
 "use client";
 
-import { useWatch, useFormContext } from "react-hook-form";
+import { useFormContext } from "react-hook-form";
 import { type ResumeData } from "@/lib/schemas";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Github, Linkedin, Mail, MapPin, Phone, Link as LinkIcon } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
+import { useDebouncedFormWatch } from "@/hooks/use-debounced-watch";
 
 type ResumePreviewProps = {
   scrollAreaClassName?: string;
@@ -15,7 +16,7 @@ type ResumePreviewProps = {
 
 export function ResumePreview({ scrollAreaClassName }: ResumePreviewProps) {
   const { control } = useFormContext<ResumeData>();
-  const data = useWatch({ control });
+  const data = useDebouncedFormWatch(control, 300);
 
   const { personalDetails, education, skills, experience, projects } = data;
   
