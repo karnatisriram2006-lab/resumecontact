@@ -21,10 +21,10 @@ import { useToast } from '@/hooks/use-toast';
 
 type Props = {
   requests: ResumeRequest[];
+  setRequests: React.Dispatch<React.SetStateAction<ResumeRequest[]>>;
 };
 
-export function ResumeRequestsTable({ requests: initialRequests }: Props) {
-  const [requests, setRequests] = useState(initialRequests);
+export function ResumeRequestsTable({ requests, setRequests }: Props) {
   const [selectedResume, setSelectedResume] = useState<ResumeRequest | null>(null);
   const [isPending, startTransition] = useTransition();
   const { toast } = useToast();

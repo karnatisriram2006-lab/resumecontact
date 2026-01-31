@@ -1,7 +1,8 @@
 "use server";
 
-import { db } from "@/lib/firebase";
-import { collection, getDocs, doc, updateDoc, Timestamp, orderBy, query } from "firebase/firestore";
+import { db, storage } from "@/lib/firebase";
+import { collection, getDocs, doc, updateDoc, Timestamp, orderBy, query, deleteDoc } from "firebase/firestore";
+import { ref, deleteObject } from "firebase/storage";
 import type { ResumeData, ContactSchema as ContactDataType } from "@/lib/schemas";
 import { z } from "zod";
 
@@ -62,6 +63,21 @@ export async function updateResumeStatus(id: string, status: 'new' | 'contacted'
         return true;
     } catch (error) {
         console.error("Error updating resume status: ", error);
+        return false;
+    }
+}
+
+export async function deleteContactMessage(id: string, fileUrl?: string): Promise<boolean> {
+    try {
+        if (fileUrl) {
+            const fileRef = ref(storage, fileUrl);
+            await deleteObject(fileRef);
+        }
+        const messageDocRef = doc(db, "contactMessages", id);
+        await deleteDoc(messageDocRef);
+        return true;
+    } catch (error) {
+        console.error("Error deleting contact message: ", error);
         return false;
     }
 }

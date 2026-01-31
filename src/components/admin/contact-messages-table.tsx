@@ -1,7 +1,9 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useTransition } from 'react';
 import type { ContactMessage } from '@/lib/actions/admin';
+import { deleteContactMessage } from '@/lib/actions/admin';
+import { useToast } from '@/hooks/use-toast';
 import {
   Table,
   TableBody,
@@ -11,7 +13,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from '@/components/ui/button';
-import { Download, ExternalLink, Trash2 } from 'lucide-react';
+import { Download, ExternalLink, Trash2, Loader2 } from 'lucide-react';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -28,15 +30,30 @@ import { format } from 'date-fns';
 
 type Props = {
   messages: ContactMessage[];
+  setMessages: React.Dispatch<React.SetStateAction<ContactMessage[]>>;
 };
 
-export function ContactMessagesTable({ messages: initialMessages }: Props) {
-  const [messages, setMessages] = useState(initialMessages);
+export function ContactMessagesTable({ messages, setMessages }: Props) {
+  const [isPending, startTransition] = useTransition();
+  const { toast } = useToast();
 
-  const handleDelete = (id: string) => {
-    // Here you would call a server action to delete the message from Firestore
-    console.log(`Deleting message ${id}`);
-    setMessages(messages.filter(msg => msg.id !== id));
+  const handleDelete = (id: string, fileUrl?: string) => {
+    startTransition(async () => {
+      const success = await deleteContactMessage(id, fileUrl);
+      if (success) {
+        setMessages((prev) => prev.filter((msg) => msg.id !== id));
+        toast({
+          title: 'Message Deleted',
+          description: 'The message has been successfully deleted.',
+        });
+      } else {
+        toast({
+          variant: 'destructive',
+          title: 'Error',
+          description: 'Failed to delete the message. Please try again.',
+        });
+      }
+    });
   };
 
   if (messages.length === 0) {
@@ -93,15 +110,17 @@ export function ContactMessagesTable({ messages: initialMessages }: Props) {
                     <AlertDialogHeader>
                       <AlertDialogTitle>Are you sure?</AlertDialogTitle>
                       <AlertDialogDescription>
-                        This action cannot be undone. This will permanently delete this message.
+                        This action cannot be undone. This will permanently delete this message and its attachment.
                       </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
                       <AlertDialogCancel>Cancel</AlertDialogCancel>
                       <AlertDialogAction
-                        onClick={() => handleDelete(message.id)}
+                        onClick={() => handleDelete(message.id, message.fileUrl)}
                         className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                        disabled={isPending}
                       >
+                        {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                         Delete
                       </AlertDialogAction>
                     </AlertDialogFooter>
