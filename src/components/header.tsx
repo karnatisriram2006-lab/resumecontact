@@ -91,9 +91,14 @@ export function Header() {
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
-            <Button asChild size="sm" className="hidden md:flex" style={{backgroundColor: 'hsl(var(--accent))', color: 'hsl(var(--accent-foreground))'}}>
-              <Link href="/resume">Get Started</Link>
-            </Button>
+            <div className="hidden items-center gap-2 md:flex">
+              <Button asChild size="sm" variant="ghost">
+                <Link href="/login">Admin Login</Link>
+              </Button>
+              <Button asChild size="sm" style={{backgroundColor: 'hsl(var(--accent))', color: 'hsl(var(--accent-foreground))'}}>
+                <Link href="/resume">Get Started</Link>
+              </Button>
+            </div>
           )}
 
           <div className="md:hidden">
@@ -115,8 +120,10 @@ export function Header() {
                 </SheetHeader>
                 <div className="mt-8 flex flex-col gap-6">
                   {MainNavItems}
-                  {user && (
+                  {user ? (
                      <Link href="/admin" className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary">Admin</Link>
+                  ) : (
+                     <Link href="/login" className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary">Admin Login</Link>
                   )}
                 </div>
               </SheetContent>
