@@ -8,7 +8,7 @@ import { ContactMessagesTable } from "./contact-messages-table";
 import { Mail } from "lucide-react";
 import { useFirestore, useCollection, useMemoFirebase } from "@/firebase";
 import { type ResumeData } from "@/lib/schemas";
-import { Logo } from "../logo";
+import { Logo } from "@/components/logo";
 
 // Types moved here to be accessible by client-side components
 export type ResumeRequest = {

@@ -13,10 +13,10 @@ import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { FormStepper } from "@/components/resume/form-stepper";
 import { ResumePreview } from "@/components/resume/resume-preview";
 import { FormNavigation } from "@/components/resume/form-navigation";
-import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle, Eye } from "lucide-react";
-import { Button } from "../ui/button";
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "../ui/sheet";
+import { Button } from "@/components/ui/button";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 
 export function ResumeBuilder() {
   const router = useRouter();

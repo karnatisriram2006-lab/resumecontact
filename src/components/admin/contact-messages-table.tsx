@@ -26,7 +26,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { Badge } from '../ui/badge';
+import { Badge } from '@/components/ui/badge';
 import { format } from 'date-fns';
 import { type ContactMessage } from './dashboard';
 

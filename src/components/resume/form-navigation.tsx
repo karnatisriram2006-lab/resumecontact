@@ -1,7 +1,7 @@
 "use client";
 
 import { useMultiStepForm } from "@/contexts/multi-step-form-context";
-import { Button } from "../ui/button";
+import { Button } from "@/components/ui/button";
 import { AiSuggestionModal } from "./ai-suggestion-modal";
 import { Loader2 } from "lucide-react";
 

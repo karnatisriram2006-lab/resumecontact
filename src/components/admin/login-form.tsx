@@ -20,7 +20,7 @@ import {
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { LoginSchema } from '@/lib/schemas';
 import { useAuth } from '@/firebase';
-import { Alert, AlertDescription, AlertTitle } from '../ui/alert';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { AlertCircle, Loader2 } from 'lucide-react';
 
 export function LoginForm() {
