@@ -6,8 +6,9 @@ import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { ResumeSchema } from "@/lib/schemas";
 import { useMultiStepForm } from "@/contexts/multi-step-form-context";
-import { submitResumeAction } from "@/lib/actions/resume";
 import { useToast } from "@/hooks/use-toast";
+import { useFirestore } from "@/firebase";
+import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 
 import { FormStepper } from "@/components/resume/form-stepper";
 import { ResumePreview } from "@/components/resume/resume-preview";
@@ -21,22 +22,32 @@ export function ResumeBuilder() {
   const { currentStep, steps } = useMultiStepForm();
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
+  const firestore = useFirestore();
 
-  const { handleSubmit } = useFormContext<z.infer<typeof ResumeSchema>>();
+  const { handleSubmit, getValues } = useFormContext<z.infer<typeof ResumeSchema>>();
 
   const onSubmit = (data: z.infer<typeof ResumeSchema>) => {
     setError(null);
     startTransition(async () => {
-      const result = await submitResumeAction(data);
-      if (result.error) {
-        setError(result.error);
+      try {
+        const validatedData = ResumeSchema.parse(data);
+
+        const docRef = await addDoc(collection(firestore, "resumeRequests"), {
+          resumeData: validatedData,
+          status: 'new',
+          createdAt: serverTimestamp(),
+        });
+
+        router.push(`/resume/success?id=${docRef.id}`);
+
+      } catch (e: any) {
+        const errorMessage = e instanceof Error ? e.message : "An unknown error occurred.";
+        setError(errorMessage);
         toast({
           variant: "destructive",
           title: "Submission Failed",
-          description: result.error,
+          description: errorMessage,
         });
-      } else {
-        router.push(`/resume/success?id=${result.id}`);
       }
     });
   };

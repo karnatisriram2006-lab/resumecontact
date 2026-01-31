@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useTransition } from 'react';
-import type { ResumeRequest } from '@/lib/actions/admin';
-import { updateResumeStatus } from '@/lib/actions/admin';
+import { doc, updateDoc } from 'firebase/firestore';
+import { useFirestore } from '@/firebase';
 import {
   Table,
   TableBody,
@@ -18,27 +18,29 @@ import { ResumeDetailView } from './resume-detail-view';
 import { cn } from '@/lib/utils';
 import { formatDistanceToNow } from 'date-fns';
 import { useToast } from '@/hooks/use-toast';
+import { type ResumeRequest } from './dashboard';
 
 type Props = {
   requests: ResumeRequest[];
-  setRequests: React.Dispatch<React.SetStateAction<ResumeRequest[]>>;
 };
 
-export function ResumeRequestsTable({ requests, setRequests }: Props) {
+export function ResumeRequestsTable({ requests }: Props) {
   const [selectedResume, setSelectedResume] = useState<ResumeRequest | null>(null);
   const [isPending, startTransition] = useTransition();
   const { toast } = useToast();
+  const firestore = useFirestore();
 
   const handleMarkAsContacted = (id: string) => {
     startTransition(async () => {
-      const success = await updateResumeStatus(id, 'contacted');
-      if (success) {
-        setRequests(requests.map(req => req.id === id ? { ...req, status: 'contacted' } : req));
+      try {
+        const resumeDocRef = doc(firestore, "resumeRequests", id);
+        await updateDoc(resumeDocRef, { status: 'contacted' });
         toast({
           title: "Status Updated",
           description: "Resume marked as contacted.",
         });
-      } else {
+      } catch(error) {
+        console.error("Error updating status:", error);
         toast({
           variant: 'destructive',
           title: "Update Failed",
@@ -52,6 +54,7 @@ export function ResumeRequestsTable({ requests, setRequests }: Props) {
     return (
       <Badge
         className={cn(
+          'capitalize',
           status === 'new' && 'bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-300',
           status === 'contacted' && 'bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300'
         )}
@@ -82,7 +85,7 @@ export function ResumeRequestsTable({ requests, setRequests }: Props) {
             {requests.map((request) => (
               <TableRow key={request.id}>
                 <TableCell className="font-medium whitespace-nowrap">
-                  {formatDistanceToNow(request.createdAt.toDate(), { addSuffix: true })}
+                  {request.createdAt ? formatDistanceToNow(new Date(request.createdAt.seconds * 1000), { addSuffix: true }) : 'N/A'}
                 </TableCell>
                 <TableCell>{request.resumeData.personalDetails.fullName}</TableCell>
                 <TableCell>{request.resumeData.personalDetails.email}</TableCell>

@@ -5,7 +5,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useState, useTransition } from "react";
 import { useToast } from "@/hooks/use-toast";
-import { submitContactAction } from "@/lib/actions/contact";
+import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { useFirestore, useStorage } from "@/firebase";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -30,6 +32,9 @@ export function ContactForm() {
   const [success, setSuccess] = useState(false);
   const [isPending, startTransition] = useTransition();
   const [file, setFile] = useState<File | null>(null);
+  
+  const firestore = useFirestore();
+  const storage = useStorage();
 
   const form = useForm<FormData>({
     resolver: zodResolver(ContactSchema),
@@ -37,6 +42,7 @@ export function ContactForm() {
       name: "",
       email: "",
       message: "",
+      fileUrl: "",
     },
   });
 
@@ -56,24 +62,25 @@ export function ContactForm() {
     setError(null);
     setSuccess(false);
     startTransition(async () => {
-      const formData = new FormData();
-      formData.append('name', values.name);
-      formData.append('email', values.email);
-      formData.append('message', values.message);
-      if (file) {
-        formData.append('file', file);
-      }
-      
-      const result = await submitContactAction(formData);
+      try {
+        let fileUrl: string | undefined = undefined;
 
-      if (result.error) {
-        setError(result.error);
-        toast({
-            variant: "destructive",
-            title: "Submission Failed",
-            description: result.error,
-        });
-      } else {
+        if (file) {
+          const storageRef = ref(storage, `contact-attachments/${Date.now()}-${file.name}`);
+          const snapshot = await uploadBytes(storageRef, file);
+          fileUrl = await getDownloadURL(snapshot.ref);
+        }
+
+        const contactMessage = {
+          name: values.name,
+          email: values.email,
+          message: values.message,
+          ...(fileUrl && { fileUrl }),
+          createdAt: serverTimestamp(),
+        };
+
+        await addDoc(collection(firestore, "contactMessages"), contactMessage);
+
         setSuccess(true);
         toast({
           title: "Message Sent!",
@@ -81,6 +88,15 @@ export function ContactForm() {
         });
         form.reset();
         setFile(null);
+      } catch (e: any) {
+        console.error("Error submitting contact form:", e);
+        const errorMessage = e.message || "An unexpected error occurred. Please try again later.";
+        setError(errorMessage);
+        toast({
+            variant: "destructive",
+            title: "Submission Failed",
+            description: errorMessage,
+        });
       }
     });
   };
