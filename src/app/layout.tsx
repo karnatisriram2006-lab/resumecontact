@@ -4,7 +4,7 @@ import { ThemeProvider } from '@/components/theme-provider';
 import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
 import { Toaster } from '@/components/ui/toaster';
-import { AuthProvider } from '@/context/auth-provider';
+import { FirebaseClientProvider } from '@/firebase';
 
 export const metadata: Metadata = {
   title: 'ResumeContact Pro',
@@ -30,14 +30,14 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <AuthProvider>
+          <FirebaseClientProvider>
             <div className="flex min-h-screen flex-col">
               <Header />
               <main className="flex-grow">{children}</main>
               <Footer />
             </div>
             <Toaster />
-          </AuthProvider>
+          </FirebaseClientProvider>
         </ThemeProvider>
       </body>
     </html>

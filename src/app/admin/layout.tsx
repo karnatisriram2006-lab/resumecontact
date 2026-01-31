@@ -2,20 +2,20 @@
 
 import React, { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { useAuth } from '@/context/auth-provider';
+import { useUser } from '@/firebase';
 import { Skeleton } from '@/components/ui/skeleton';
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
-  const { user, loading } = useAuth();
+  const { user, isUserLoading } = useUser();
   const router = useRouter();
 
   useEffect(() => {
-    if (!loading && !user) {
+    if (!isUserLoading && !user) {
       router.push('/login');
     }
-  }, [user, loading, router]);
+  }, [user, isUserLoading, router]);
 
-  if (loading) {
+  if (isUserLoading) {
     return (
       <div className="flex h-screen w-full items-center justify-center">
         <div className="flex flex-col items-center gap-4">

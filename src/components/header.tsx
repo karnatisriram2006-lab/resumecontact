@@ -3,6 +3,7 @@
 import Link from "next/link"
 import { FileText, Menu, LayoutDashboard, LogOut, User as UserIcon } from "lucide-react"
 import { usePathname, useRouter } from "next/navigation"
+import { signOut as firebaseSignOut } from "firebase/auth"
 
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
@@ -14,7 +15,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet"
-import { useAuth } from "@/context/auth-provider"
+import { useUser, useAuth } from "@/firebase"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "./ui/dropdown-menu"
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar"
 import { Skeleton } from "./ui/skeleton"
@@ -27,10 +28,11 @@ const mainNavLinks = [
 export function Header() {
   const pathname = usePathname()
   const router = useRouter()
-  const { user, loading, signOut } = useAuth()
+  const { user, isUserLoading } = useUser()
+  const auth = useAuth()
 
   const handleSignOut = async () => {
-    await signOut()
+    await firebaseSignOut(auth)
     router.push('/')
   }
 
@@ -62,7 +64,7 @@ export function Header() {
         <div className="ml-auto flex items-center gap-2">
           <ThemeToggle />
           
-          {loading ? (
+          {isUserLoading ? (
              <Skeleton className="h-8 w-24" />
           ) : user ? (
             <DropdownMenu>

@@ -5,6 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useRouter } from 'next/navigation';
 import { useState, useTransition } from 'react';
+import { signInWithEmailAndPassword } from 'firebase/auth';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -18,13 +19,13 @@ import {
 } from '@/components/ui/form';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { LoginSchema } from '@/lib/schemas';
-import { useAuth } from '@/context/auth-provider';
+import { useAuth } from '@/firebase';
 import { Alert, AlertDescription, AlertTitle } from '../ui/alert';
 import { AlertCircle, Loader2 } from 'lucide-react';
 
 export function LoginForm() {
   const router = useRouter();
-  const { signIn } = useAuth();
+  const auth = useAuth();
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
 
@@ -39,11 +40,20 @@ export function LoginForm() {
   function onSubmit(values: z.infer<typeof LoginSchema>) {
     setError(null);
     startTransition(async () => {
-      const result = await signIn(values);
-      if (result.error) {
-        setError(result.error);
-      } else {
+      try {
+        await signInWithEmailAndPassword(auth, values.email, values.password);
         router.push('/admin');
+      } catch (error: any) {
+        switch (error.code) {
+          case 'auth/user-not-found':
+          case 'auth/wrong-password':
+          case 'auth/invalid-credential':
+            setError("Invalid email or password.");
+            break;
+          default:
+            setError("An unexpected error occurred. Please try again.");
+            break;
+        }
       }
     });
   }
