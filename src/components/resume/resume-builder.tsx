@@ -14,7 +14,9 @@ import { FormStepper } from "@/components/resume/form-stepper";
 import { ResumePreview } from "@/components/resume/resume-preview";
 import { FormNavigation } from "@/components/resume/form-navigation";
 import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
-import { AlertCircle } from "lucide-react";
+import { AlertCircle, Eye } from "lucide-react";
+import { Button } from "../ui/button";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "../ui/sheet";
 
 export function ResumeBuilder() {
   const router = useRouter();
@@ -24,7 +26,7 @@ export function ResumeBuilder() {
   const [isPending, startTransition] = useTransition();
   const firestore = useFirestore();
 
-  const { handleSubmit, getValues } = useFormContext<z.infer<typeof ResumeSchema>>();
+  const { handleSubmit } = useFormContext<z.infer<typeof ResumeSchema>>();
 
   const onSubmit = (data: z.infer<typeof ResumeSchema>) => {
     setError(null);
@@ -57,7 +59,27 @@ export function ResumeBuilder() {
   return (
     <div className="container mx-auto grid min-h-[calc(100vh-8rem)] max-w-7xl grid-cols-1 gap-12 px-4 py-8 lg:grid-cols-2">
       <div className="flex flex-col">
-        <FormStepper />
+        <div className="flex items-center justify-between">
+          <FormStepper />
+          <div className="lg:hidden">
+            <Sheet>
+              <SheetTrigger asChild>
+                <Button variant="outline" size="sm">
+                  <Eye className="mr-2 h-4 w-4" />
+                  Preview
+                </Button>
+              </SheetTrigger>
+              <SheetContent className="w-full max-w-full overflow-y-auto p-4 sm:max-w-lg">
+                  <SheetHeader>
+                      <SheetTitle>Resume Preview</SheetTitle>
+                  </SheetHeader>
+                  <div className="mt-4">
+                      <ResumePreview scrollAreaClassName="h-auto max-h-[90vh] border-none shadow-none p-0" />
+                  </div>
+              </SheetContent>
+            </Sheet>
+          </div>
+        </div>
         <form onSubmit={handleSubmit(onSubmit)} className="mt-8 flex flex-grow flex-col">
           <div className="flex-grow">
             {error && (

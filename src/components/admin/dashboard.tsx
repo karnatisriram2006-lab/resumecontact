@@ -50,7 +50,7 @@ export function AdminDashboard() {
 
   return (
     <Tabs defaultValue="resumes" className="w-full">
-      <TabsList className="grid w-full grid-cols-2 md:w-[400px]">
+      <TabsList className="grid w-full max-w-[400px] grid-cols-2">
         <TabsTrigger value="resumes">
           <Logo className="mr-2 h-4 w-4" />
           Resume Requests ({loadingResumes ? '...' : resumeCount})

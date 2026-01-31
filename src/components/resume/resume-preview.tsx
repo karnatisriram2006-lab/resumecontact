@@ -7,8 +7,13 @@ import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { Github, Linkedin, Mail, MapPin, Phone, Link as LinkIcon } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
+import { cn } from "@/lib/utils";
 
-export function ResumePreview() {
+type ResumePreviewProps = {
+  scrollAreaClassName?: string;
+};
+
+export function ResumePreview({ scrollAreaClassName }: ResumePreviewProps) {
   const { control } = useFormContext<ResumeData>();
   const data = useWatch({ control });
 
@@ -18,7 +23,7 @@ export function ResumePreview() {
 
   if (!hasContent) {
     return (
-      <div className="h-[80vh] rounded-lg border bg-card p-8 shadow-md">
+      <div className={cn("h-[80vh] rounded-lg border bg-card p-8 shadow-md", scrollAreaClassName)}>
         <div className="space-y-6">
             <Skeleton className="h-10 w-3/4" />
             <Skeleton className="h-4 w-full" />
@@ -45,7 +50,7 @@ export function ResumePreview() {
 
 
   return (
-    <ScrollArea className="h-[80vh] rounded-lg border bg-card p-2 shadow-md">
+    <ScrollArea className={cn("h-[80vh] rounded-lg border bg-card p-2 shadow-md", scrollAreaClassName)}>
       <div className="p-6 text-sm">
         <div className="space-y-8">
           {/* Header */}
