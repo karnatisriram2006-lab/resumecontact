@@ -1,27 +1,94 @@
+/**
+ * Core Philosophy:
+ * This ruleset enforces a "write-once, read-never" security model for client-side
+ * operations. Any authenticated user, including anonymous users, can submit data
+ * by creating new documents in the `resumeRequests` and `contactMessages`
+ * collections. However, all subsequent read, update, and delete operations are
+ * strictly forbidden from the client. This model assumes that a trusted backend
+ * service (e.g., using the Firebase Admin SDK) is responsible for managing and
+ * processing the submitted data.
+ *
+ * Data Structure:
+ * The data is organized into two top-level collections:
+ * - /resumeRequests: Stores resume submission forms.
+ * - /contactMessages: Stores general contact form messages.
+ * This flat structure isolates different data types and simplifies security logic.
+ *
+ * Key Security Decisions:
+ * - Public Submission: To support website forms, any authenticated session
+ *   (including anonymous sign-in) is permitted to create documents.
+ * - No Client-Side Reads: Listing or getting individual documents is disallowed
+ *   to protect user-submitted PII. All data review must happen via a secure
+ *   backend or admin dashboard.
+ * - Immutable Submissions: Once a document is created, it cannot be modified
+ *   or deleted by any client, preventing tampering.
+ * - Backend-Centric Management: The rules are designed with the explicit
+ *   understanding that all data management (read, update, delete) is performed
+ *   by a privileged backend environment that bypasses these client-facing rules.
+ */
 rules_version = '2';
-
 service cloud.firestore {
   match /databases/{database}/documents {
-    
-    // For the purpose of this project, any authenticated user is considered an admin.
-    // In a production app, you should use custom claims to identify admins.
-    // https://firebase.google.com/docs/auth/admin/custom-claims
-    function isAdmin() {
+
+    // ------------------------------------------------------------------------
+    // Helper Functions
+    // ------------------------------------------------------------------------
+
+    /**
+     * Checks if the user is authenticated, including anonymous users.
+     */
+    function isSignedIn() {
       return request.auth != null;
     }
 
-    // Resume Requests can be created by anyone.
-    // Only admins can read, update, or delete them.
-    match /resumeRequests/{requestId} {
-      allow create: if true;
-      allow read, update, delete: if isAdmin();
+    // ------------------------------------------------------------------------
+    // Collection Rules
+    // ------------------------------------------------------------------------
+
+    /**
+     * @description
+     *   Allows any authenticated user (including anonymous) to create a resume
+     *   request, but denies all read, update, and delete operations from any client.
+     *   This creates a secure "drop-box" for form submissions.
+     * @path
+     *   /resumeRequests/{resumeRequestId}
+     * @allow
+     *   An anonymous user creating a new request: (create) `/resumeRequests/req123`
+     * @deny
+     *   Any user trying to read a request: (get) `/resumeRequests/req123`
+     * @principle
+     *   Enforces a 'write-once, read-never' model for client submissions, assuming
+     *   all data management is done by a trusted backend.
+     */
+    match /resumeRequests/{resumeRequestId} {
+      allow get: if false;
+      allow list: if false;
+      allow create: if isSignedIn();
+      allow update: if false;
+      allow delete: if false;
     }
 
-    // Contact Messages can be created by anyone.
-    // Only admins can read, update, or delete them.
-    match /contactMessages/{messageId} {
-      allow create: if true;
-      allow read, update, delete: if isAdmin();
+    /**
+     * @description
+     *   Allows any authenticated user (including anonymous) to create a contact
+     *   message, but denies all read, update, and delete operations from any client.
+     *   This provides a secure mechanism for public contact forms.
+     * @path
+     *   /contactMessages/{contactMessageId}
+     * @allow
+     *   An authenticated user creating a new message: (create) `/contactMessages/msg456`
+     * @deny
+     *   Any user trying to list all messages: (list) `/contactMessages`
+     * @principle
+     *   Enforces a 'write-once, read-never' model for client submissions, assuming
+     *   all data management is done by a trusted backend.
+     */
+    match /contactMessages/{contactMessageId} {
+      allow get: if false;
+      allow list: if false;
+      allow create: if isSignedIn();
+      allow update: if false;
+      allow delete: if false;
     }
   }
 }

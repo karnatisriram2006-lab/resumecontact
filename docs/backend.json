@@ -1,0 +1,120 @@
+{
+  "entities": {
+    "ResumeRequest": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "ResumeRequest",
+      "type": "object",
+      "description": "Represents a resume request submitted by a user.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the resume request."
+        },
+        "resumeData": {
+          "type": "string",
+          "description": "JSON string containing the resume data."
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp indicating when the resume request was created.",
+          "format": "date-time"
+        },
+        "status": {
+          "type": "string",
+          "description": "Status of the resume request (e.g., 'new', 'contacted')."
+        }
+      },
+      "required": [
+        "id",
+        "resumeData",
+        "createdAt",
+        "status"
+      ]
+    },
+    "ContactMessage": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "ContactMessage",
+      "type": "object",
+      "description": "Represents a contact message submitted by a user.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the contact message."
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the user submitting the contact message."
+        },
+        "email": {
+          "type": "string",
+          "description": "Email address of the user submitting the contact message.",
+          "format": "email"
+        },
+        "message": {
+          "type": "string",
+          "description": "The contact message content."
+        },
+        "uploadFile": {
+          "type": "string",
+          "description": "URL of the uploaded file (PDF/Doc), if any.",
+          "format": "uri"
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp indicating when the contact message was created.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "email",
+        "message",
+        "createdAt"
+      ]
+    }
+  },
+  "auth": {
+    "providers": [
+      "password",
+      "anonymous"
+    ]
+  },
+  "firestore": {
+    "structure": [
+      {
+        "path": "/resumeRequests/{resumeRequestId}",
+        "definition": {
+          "entityName": "ResumeRequest",
+          "schema": {
+            "$ref": "#/backend/entities/ResumeRequest"
+          },
+          "description": "Stores resume requests submitted by users.  Accessible only by admins. No user ownership is explicitly modeled.",
+          "params": [
+            {
+              "name": "resumeRequestId",
+              "description": "Unique identifier for the resume request."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/contactMessages/{contactMessageId}",
+        "definition": {
+          "entityName": "ContactMessage",
+          "schema": {
+            "$ref": "#/backend/entities/ContactMessage"
+          },
+          "description": "Stores contact messages submitted by users.  Accessible only by admins. No user ownership is explicitly modeled.",
+          "params": [
+            {
+              "name": "contactMessageId",
+              "description": "Unique identifier for the contact message."
+            }
+          ]
+        }
+      }
+    ],
+    "reasoning": "The Firestore data structure is designed to securely store resume requests and contact messages while providing an efficient admin dashboard. Key to this structure is Authorization Independence, achieved through path-based ownership for private data. This eliminates the need for `get()` calls in security rules, allowing for atomic operations and easier debugging.\n\n*   `/resumeRequests/{resumeRequestId}`: This collection stores resume requests. No user ownership is explicitly modeled since these requests are intended to be managed by the admin, therefore securing the collection is done via role-based checks on the backend.\n*   `/contactMessages/{contactMessageId}`: This collection stores contact messages. Similar to resume requests, access is managed by backend role-based checks.\n\nThis structure facilitates simple, robust, and debuggable security rules by:\n\n*   Segregating data with different access requirements into separate collections (resumeRequests vs. contactMessages).\n*   Avoiding hierarchical authorization dependencies.\n\nThe structure also supports required QAPs:\n\n*   Secure `list` operations: Because collections are segregated, rules can be written to allow listing entire collections based on admin roles."
+  }
+}
