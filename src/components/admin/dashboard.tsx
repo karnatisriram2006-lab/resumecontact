@@ -5,9 +5,10 @@ import { collection, query, orderBy, Timestamp } from "firebase/firestore";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ResumeRequestsTable } from "./resume-requests-table";
 import { ContactMessagesTable } from "./contact-messages-table";
-import { FileText, Mail } from "lucide-react";
+import { Mail } from "lucide-react";
 import { useFirestore, useCollection, useMemoFirebase } from "@/firebase";
 import { type ResumeData } from "@/lib/schemas";
+import { Logo } from "../logo";
 
 // Types moved here to be accessible by client-side components
 export type ResumeRequest = {
@@ -51,7 +52,7 @@ export function AdminDashboard() {
     <Tabs defaultValue="resumes" className="w-full">
       <TabsList className="grid w-full grid-cols-2 md:w-[400px]">
         <TabsTrigger value="resumes">
-          <FileText className="mr-2 h-4 w-4" />
+          <Logo className="mr-2 h-4 w-4" />
           Resume Requests ({loadingResumes ? '...' : resumeCount})
         </TabsTrigger>
         <TabsTrigger value="messages">

@@ -1,6 +1,7 @@
 import Link from "next/link"
-import { Github, Linkedin, Twitter, FileText } from "lucide-react"
+import { Github, Linkedin, Twitter } from "lucide-react"
 import { Button } from "./ui/button"
+import { Logo } from "./logo"
 
 export function Footer() {
   return (
@@ -8,7 +9,7 @@ export function Footer() {
       <div className="container py-8">
         <div className="flex flex-col items-center justify-between gap-6 sm:flex-row">
           <div className="flex items-center gap-2">
-            <FileText className="h-6 w-6 text-primary" />
+            <Logo className="h-6 w-6 text-primary" />
             <span className="font-headline text-lg font-bold">ResumeContact Pro</span>
           </div>
           <p className="text-sm text-muted-foreground">

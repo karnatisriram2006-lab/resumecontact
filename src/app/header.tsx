@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { FileText, Menu, LayoutDashboard, LogOut, User as UserIcon } from "lucide-react"
+import { Menu, LayoutDashboard, LogOut, User as UserIcon } from "lucide-react"
 import { usePathname, useRouter } from "next/navigation"
 import { signOut as firebaseSignOut } from "firebase/auth"
 
@@ -19,6 +19,7 @@ import { useUser, useAuth } from "@/firebase"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "./ui/dropdown-menu"
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar"
 import { Skeleton } from "./ui/skeleton"
+import { Logo } from "@/components/logo"
 
 const mainNavLinks = [
   { href: "/resume", label: "Create Resume" },
@@ -55,7 +56,7 @@ export function Header() {
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur-sm">
       <div className="container flex h-16 items-center">
         <Link href="/" className="mr-6 flex items-center gap-2">
-          <FileText className="h-6 w-6 text-primary" />
+          <Logo className="h-6 w-6 text-primary" />
           <span className="font-headline text-lg font-bold">ResumeContact Pro</span>
         </Link>
         <nav className="hidden items-center gap-6 md:flex">
@@ -115,7 +116,7 @@ export function Header() {
                 <SheetHeader>
                   <SheetTitle>
                     <Link href="/" className="flex items-center gap-2">
-                      <FileText className="h-6 w-6 text-primary" />
+                      <Logo className="h-6 w-6 text-primary" />
                       <span className="font-headline text-lg font-bold">ResumeContact Pro</span>
                     </Link>
                   </SheetTitle>
