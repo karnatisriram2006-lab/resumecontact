@@ -8,10 +8,10 @@ export default function LoginPage() {
         <div className="text-center">
             <FileText className="mx-auto h-12 w-12 text-primary" />
           <h1 className="mt-6 font-headline text-3xl font-bold tracking-tight">
-            Admin Login
+            Login
           </h1>
           <p className="mt-2 text-muted-foreground">
-            Access your dashboard to manage submissions.
+            Sign in to your account.
           </p>
         </div>
         <LoginForm />

@@ -95,7 +95,7 @@ export function Header() {
           ) : (
             <div className="hidden items-center gap-2 md:flex">
               <Button asChild size="sm" variant="ghost">
-                <Link href="/login">Admin Login</Link>
+                <Link href="/login">Login</Link>
               </Button>
               <Button asChild size="sm" style={{backgroundColor: 'hsl(var(--accent))', color: 'hsl(var(--accent-foreground))'}}>
                 <Link href="/resume">Get Started</Link>
@@ -125,7 +125,7 @@ export function Header() {
                   {user ? (
                      <Link href="/admin" className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary">Admin</Link>
                   ) : (
-                     <Link href="/login" className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary">Admin Login</Link>
+                     <Link href="/login" className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary">Login</Link>
                   )}
                 </div>
               </SheetContent>
