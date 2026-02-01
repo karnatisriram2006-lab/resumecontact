@@ -29,19 +29,6 @@ const nextConfig = {
       /Critical dependency: require function is used in a way in which dependencies cannot be statically extracted/,
     ];
 
-    // Force webpack to use the browser-compatible builds of Firebase packages.
-    // This is a common workaround for Next.js App Router build issues with Firebase.
-    const firebaseAlias = {
-        '@firebase/app': 'firebase/app',
-        '@firebase/auth': 'firebase/auth',
-        '@firebase/firestore': 'firebase/firestore',
-        '@firebase/storage': 'firebase/storage',
-    }
-    config.resolve.alias = {
-        ...config.resolve.alias,
-        ...firebaseAlias
-    };
-
     return config;
   },
 };
