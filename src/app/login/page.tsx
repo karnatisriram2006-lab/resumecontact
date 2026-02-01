@@ -1,3 +1,5 @@
+"use client";
+
 import { LoginForm } from '@/components/admin/login-form';
 import { Logo } from '@/components/logo';
 
