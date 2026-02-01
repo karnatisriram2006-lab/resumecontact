@@ -10,7 +10,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { TagInput } from "@/components/ui/tag-input";
+import { TagInput, type Tag } from "@/components/ui/tag-input";
 
 export function SkillsForm() {
   const { control } = useFormContext<ResumeData>();
@@ -29,10 +29,10 @@ export function SkillsForm() {
             <FormLabel>Your Skills</FormLabel>
             <FormControl>
               <TagInput
-                {...field}
+                ref={field.ref}
                 placeholder="Enter a skill..."
                 tags={field.value}
-                setTags={(newTags) => {
+                setTags={(newTags: Tag[]) => {
                   field.onChange(newTags);
                 }}
               />
