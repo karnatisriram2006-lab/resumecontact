@@ -28,7 +28,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Badge } from '@/components/ui/badge';
 import { format } from 'date-fns';
-import { type ContactMessage } from './dashboard';
+import { type ContactMessage } from '@/components/admin/dashboard';
 
 type Props = {
   messages: ContactMessage[];

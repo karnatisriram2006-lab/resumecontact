@@ -2,7 +2,7 @@
 
 import { useMultiStepForm } from "@/contexts/multi-step-form-context";
 import { Button } from "@/components/ui/button";
-import { AiSuggestionModal } from "./ai-suggestion-modal";
+import { AiSuggestionModal } from "@/components/resume/ai-suggestion-modal";
 import { Loader2 } from "lucide-react";
 
 type Props = {

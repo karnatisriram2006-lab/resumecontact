@@ -1,7 +1,7 @@
 import Link from "next/link"
 import { Github, Linkedin, Twitter } from "lucide-react"
-import { Button } from "./ui/button"
-import { Logo } from "./logo"
+import { Button } from "@/components/ui/button"
+import { Logo } from "@/components/logo"
 
 export function Footer() {
   return (

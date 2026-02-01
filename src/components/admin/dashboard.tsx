@@ -3,8 +3,8 @@
 import { useMemo } from "react";
 import { collection, query, orderBy, Timestamp } from "firebase/firestore";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ResumeRequestsTable } from "./resume-requests-table";
-import { ContactMessagesTable } from "./contact-messages-table";
+import { ResumeRequestsTable } from "@/components/admin/resume-requests-table";
+import { ContactMessagesTable } from "@/components/admin/contact-messages-table";
 import { Mail } from "lucide-react";
 import { useFirestore, useCollection, useMemoFirebase } from "@/firebase";
 import { type ResumeData } from "@/lib/schemas";

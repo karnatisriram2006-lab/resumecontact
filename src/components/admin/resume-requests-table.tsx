@@ -14,11 +14,11 @@ import {
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Eye, Check, Loader2 } from 'lucide-react';
-import { ResumeDetailView } from './resume-detail-view';
+import { ResumeDetailView } from '@/components/admin/resume-detail-view';
 import { cn } from '@/lib/utils';
 import { formatDistanceToNow } from 'date-fns';
 import { useToast } from '@/hooks/use-toast';
-import { type ResumeRequest } from './dashboard';
+import { type ResumeRequest } from '@/components/admin/dashboard';
 
 type Props = {
   requests: ResumeRequest[];
