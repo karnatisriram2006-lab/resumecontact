@@ -4,8 +4,10 @@ import { ThemeProvider } from '@/components/theme-provider';
 import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
 import { Toaster } from '@/components/ui/toaster';
-import { FirebaseClientProvider } from '@/firebase';
 import { SpeedInsights } from "@vercel/speed-insights/next"
+import dynamic from 'next/dynamic';
+
+const FirebaseClientProvider = dynamic(() => import('@/firebase').then(mod => mod.FirebaseClientProvider), { ssr: false });
 
 export const metadata: Metadata = {
   title: 'ResumeContact Pro',
