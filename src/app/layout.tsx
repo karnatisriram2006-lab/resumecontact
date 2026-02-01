@@ -7,7 +7,7 @@ import { Toaster } from '@/components/ui/toaster';
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import dynamic from 'next/dynamic';
 
-const FirebaseClientProvider = dynamic(() => import('@/firebase').then(mod => mod.FirebaseClientProvider), { ssr: false });
+const FirebaseClientProvider = dynamic(() => import('@/firebase/client-provider'), { ssr: false });
 
 export const metadata: Metadata = {
   title: 'ResumeContact Pro',
