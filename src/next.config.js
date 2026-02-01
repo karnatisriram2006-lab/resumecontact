@@ -1,36 +1,3 @@
-/** @type {import('next').NextConfig} */
-const nextConfig = {
-  /* config options here */
-  images: {
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: 'placehold.co',
-        port: '',
-        pathname: '/**',
-      },
-      {
-        protocol: 'https',
-        hostname: 'images.unsplash.com',
-        port: '',
-        pathname: '/**',
-      },
-      {
-        protocol: 'https',
-        hostname: 'picsum.photos',
-        port: '',
-        pathname: '/**',
-      },
-    ],
-  },
-  webpack: (config) => {
-    config.ignoreWarnings = [
-      ...(config.ignoreWarnings || []),
-      /Critical dependency: require function is used in a way in which dependencies cannot be statically extracted/,
-    ];
-
-    return config;
-  },
-};
-
-module.exports = nextConfig;
+// This file is intentionally left blank to resolve a build configuration conflict.
+// The primary configuration is in the root next.config.js file.
+module.exports = {};
